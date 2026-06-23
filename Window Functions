@@ -1,0 +1,22 @@
+Problem Statement: Flipkart
+Flipkart, one of India’s leading e-commerce platforms, wants to strengthen its competitive position by improving customer retention,
+optimizing logistics, and increasing sales efficiency. With growing competition in the online retail space, the company’s leadership has
+tasked the analytics team to leverage customer, product, and order data to uncover actionable insights.
+The dataset contains information about customers, products, orders, and order items from January 2023 to September 2025.
+
+
+
+Question 1 : Display customers who have placed orders with an amount higher than the average order amount.
+
+Approach 1 - 
+select *
+from flipkart.customers c
+join `flipkart.orders` o 
+on c.customer_id = o.order_id
+where o.amount>(select avg(amount)
+                 from `flipkart.orders`)
+order by o.amount desc;
+
+
+Approach 2 using window functions
+
