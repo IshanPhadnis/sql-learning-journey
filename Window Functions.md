@@ -6,62 +6,27 @@ The dataset contains information about customers, products, orders, and order it
 	
 		    	
 
-Question 1 : Display customers who have placed orders with an amount higher than the average order amount.
+**Question 1 : Display customers who have placed orders with an amount higher than the average order amount.**
+
 Approach 1 - 
-select *
-from flipkart.customers c
-join `flipkart.orders` o 
-on c.customer_id = o.order_id
-where o.amount>(select avg(amount)
-                 from `flipkart.orders`)
-order by o.amount desc;
 
+<img width="746" height="342" alt="image" src="https://github.com/user-attachments/assets/202a3efe-1424-42c9-819a-aebd47b78a70" />
 
-Approach 2 using window functions
-
-
+Approach 2 using window functions - 
+<img width="1092" height="488" alt="image" src="https://github.com/user-attachments/assets/385b995e-c136-4b73-91af-d673b6c20594" />
 
 **Question 2 : Show details of orders whose amounts exceed the average order amount of their respective customers.**
 
-Approach 1 using CTE-
-with cust_avg_stats as (
-select customer_id,
-          avg(amount)avg_amt
-  from `flipkart.orders`
-  group by customer_id
-  )
-
-select *
-from `flipkart.orders` o join cust_avg_stats ca
-  on o.customer_id = ca.customer_id
-join `flipkart.customers` c
-  on o.customer_id = c.customer_id
-ORDER BY o.amount DESC;
+Approach 1 using CTE -
+<img width="870" height="554" alt="image" src="https://github.com/user-attachments/assets/b106991a-d276-485a-8595-bf60f8b32063" />
 
 Approach 2 using Window Function -
+<img width="1420" height="500" alt="image" src="https://github.com/user-attachments/assets/e748fca6-6f47-44dd-b2b2-5c61811611c8" />
 
-with avg_stats as(select c.customer_id,c.first_name,c.last_name,o.amount,round(avg(o.amount) over(partition by c.customer_id),2)avg_amt
+**Question 3 : Based on the product price, what are the top 5 costliest product types within the 'Home & Furniture' category?**
 
-from flipkart.orders o  
-join `flipkart.customers` c 
-  on o.customer_id = c.customer_id
-)
-select *
-from  avg_stats
-where amount > avg_amt order by customer_id
-
-
-
-Question 3 : Based on the product price, what are the top 5 costliest product types within the 'Home & Furniture' category?
 Approach 1 - 
-
-select p.price,
-p.product_type
-from `flipkart.order_items` o join `flipkart.products` p
-on o.product_id = p.product_id
-where p.category = 'Home & Furniture'
-order by p.price
-limit 5
+<img width="1064" height="332" alt="image" src="https://github.com/user-attachments/assets/4c9d6d81-33ea-480e-b56e-9aa1dc103ff1" />
 
 ### Limitations
 - Returns the top 5 rows instead of the top 5 ranked product types.
@@ -69,15 +34,8 @@ limit 5
 - Ties in price are not handled explicitly.
 - Less flexible than window functions for ranking and top-N analysis.
 
-
 Approach 2 - 
-
-select price,
-product_type,
-row_number() over(order by price desc) as row_no
-from `flipkart.products`
-where category = 'Home & Furniture'
-limit 5
+<img width="958" height="290" alt="image" src="https://github.com/user-attachments/assets/cdc41712-a901-4229-a251-1873983723de" />
 
 
 
