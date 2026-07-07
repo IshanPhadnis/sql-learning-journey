@@ -89,3 +89,11 @@ COUNT(*) AS total_orders_first_45_days
 FROM `flipkart.orders`
 WHERE order_date BETWEEN DATE '2025-01-01' AND DATE_ADD(DATE '2025-01-01', INTERVAL 45 DAY);
 ```
+Question: For each order, calculate the number of days since the customer’s previous order.
+```sql
+SELECT customer_id,
+order_id,
+order_date,
+LAG(order_date,1) OVER(PARTITION BY customer_id ORDER BY order_date) prev_order_date,
+DATE_DIFF(order_date, LAG(order_date,1) OVER(PARTITION BY customer_id ORDER BY order_date), DAY) days_since_prev_order
+FROM `flipkart.orders`;```
