@@ -97,3 +97,17 @@ order_date,
 LAG(order_date,1) OVER(PARTITION BY customer_id ORDER BY order_date) prev_order_date,
 DATE_DIFF(order_date, LAG(order_date,1) OVER(PARTITION BY customer_id ORDER BY order_date), DAY) days_since_prev_order
 FROM `flipkart.orders`;```
+```
+
+Question: How many days have elapsed since the most recent high-value Flipkart order (order amount > ₹10,000), considering
+September 30, 2025, as the last recorded date?
+
+```sql
+SELECT DATE_DIFF("2025-09-30", MAX(order_date), DAY) days_elapsed_since_last_order
+FROM `flipkart.orders`
+WHERE amount > 10000;
+SELECT DATE_DIFF(PARSE_DATE("%Y-%m-%d","2025-09-30"), MAX(order_date), DAY) days_elapsed_since_last_order
+FROM `flipkart.orders`
+WHERE amount > 10000;
+SELECT MAX(order_date) FROM `flipkart.orders`;
+```
